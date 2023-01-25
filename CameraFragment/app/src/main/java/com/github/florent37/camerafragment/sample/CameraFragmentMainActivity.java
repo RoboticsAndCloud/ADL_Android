@@ -41,6 +41,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import java.text.DateFormat;
+
+// how to get dataFormat https://developer.android.com/reference/java/text/DateFormat.html
+
 @SuppressLint("MissingPermission")
 public class CameraFragmentMainActivity extends AppCompatActivity  implements SensorEventListener {
 
@@ -71,6 +75,12 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
 
 
     private SensorManager sm;
+
+
+    long motionStartTime = System.currentTimeMillis();
+    long motionElapsedTime = 0L;
+
+    final int MOTION_RECORD_TIME = 2 * 1000; // 2 seconds
 
 
     @Override
@@ -111,21 +121,36 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
         String imageRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera/ADL";
         System.out.println(imageRoot);
 
+        Date date = new java.util.Date();
+//        String timeStr = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(date).toString();
+
+        android.text.format.DateFormat df = new android.text.format.DateFormat();
+        String timeStr = df.format("yyyy-MM-dd-hh:mm:ss a", new java.util.Date()).toString();
+
         if (cameraFragment != null) {
             cameraFragment.takePhotoOrCaptureVideo(new CameraFragmentResultAdapter() {
-                @Override
-                public void onVideoRecorded(String filePath) {
-                    Toast.makeText(getBaseContext(), "onVideoRecorded " + filePath, Toast.LENGTH_SHORT).show();
-                }
+                                                       @Override
+                                                       public void onVideoRecorded(String filePath) {
+                                                           Toast.makeText(getBaseContext(), "onVideoRecorded " + filePath, Toast.LENGTH_SHORT).show();
+                                                       }
 
-                @Override
-                public void onPhotoTaken(byte[] bytes, String filePath) {
-                    Toast.makeText(getBaseContext(), "onPhotoTaken " + filePath, Toast.LENGTH_SHORT).show();
-                }
-            },
-            imageRoot,
-            "photo0");
+                                                       @Override
+                                                       public void onPhotoTaken(byte[] bytes, String filePath) {
+                                                           Toast.makeText(getBaseContext(), "onPhotoTaken " + filePath, Toast.LENGTH_SHORT).show();
+                                                       }
+                                                   },
+                    imageRoot,
+                    timeStr);
         }
+
+        TextView acceleration = (TextView) findViewById(R.id.acceleration);
+        acceleration.setText("Photo:" + timeStr);
+
+//        try {
+//            Thread.sleep(5000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
         startSensor();
     }
@@ -360,6 +385,19 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
     @Override
     public void onSensorChanged(SensorEvent event) {
         Acceleration capturedAcceleration = getAccelerationFromSensor(event);
+        motionElapsedTime = (new Date()).getTime() - motionStartTime;
+        if (motionElapsedTime > MOTION_RECORD_TIME) {  // 2 seconds
+            TextView acceleration = (TextView) findViewById(R.id.acceleration);
+            acceleration.setText("X:" + capturedAcceleration.getX() +
+                    "\nY:" + capturedAcceleration.getY() +
+                    "\nZ:" + capturedAcceleration.getZ() +
+                    "\nTimestamp:" + "stop");
+
+            stopSensor();
+
+            return;
+        }
+
         updateTextView(capturedAcceleration);
 //        sendDataToCassandra(capturedAcceleration);
     }
@@ -369,6 +407,7 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
     }
 
     private void startSensor() {
+        motionStartTime = System.currentTimeMillis();
         Sensor accelerometer = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sm.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
