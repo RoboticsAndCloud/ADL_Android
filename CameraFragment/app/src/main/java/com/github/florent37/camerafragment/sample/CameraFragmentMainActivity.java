@@ -94,7 +94,7 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
 
     private static final int REQUEST_RECORD_AUDIO = 0;
     private static final String AUDIO_FILE_PATH =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera/ADL/Audio/";
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera/ADL/Audio2";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
