@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="/home/ascc/.android/build-cache/5b4d61ecd7617a294c26a306b88326578803d0ff/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="53a420cd4f49274db6bd43475f8006ba67ef6bbd">
+        <dex dex="/home/ascc/ascc/asccbot_v3/androidStudio/smartwatch/CameraFragment/app/build/intermediates/pre-dexed/debug/classes_14a42de1e203b574b1d6aa8a180e03bd9fba92fd.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ascc/.android/build-cache/94eb911ec3ee280da2241c58c5b09bcb5cc7802f/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="/home/ascc/ascc/asccbot_v3/androidStudio/smartwatch/CameraFragment/app/build/intermediates/pre-dexed/debug/classes_a1b3512acfe0afcbb7e2647efa1623e15052f900.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ascc/.android/build-cache/d47909ac5b302a7d93456c4fd104c245d959a936/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="76fb65a4b41ea42dab8a1310ed772a2420c96b52">
+        <dex dex="/home/ascc/ascc/asccbot_v3/androidStudio/smartwatch/CameraFragment/app/build/intermediates/pre-dexed/debug/classes_66411ca2d3493e307c447f09a10413f435deb2a9.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ascc/ascc/asccbot_v3/androidStudio/smartwatch/ADL_Monitoring/CameraFragment/camerafragment/build/intermediates/bundles/default/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="3243d94c5cb6c633d14bd50b565a96576ebc27e2">
+        <dex dex="/home/ascc/ascc/asccbot_v3/androidStudio/smartwatch/ADL_Monitoring/CameraFragment/app/build/intermediates/pre-dexed/debug/classes_53c79cec3a47b178abaa706a7b753bfcf203bd45.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ascc/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/25.0.0/support-annotations-25.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="a22d2cc94da87b254451fa8ed28afc30b4653773">
+        <dex dex="/home/ascc/ascc/asccbot_v3/androidStudio/smartwatch/CameraFragment/app/build/intermediates/pre-dexed/debug/support-annotations-25.0.0_e0282c02aaab475c31c7813c18c2b7af147d85d3.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ascc/.android/build-cache/d2acb17b531e12f24d1db4a7fd953ae8a18cabdf/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="07daa0b6e1d455c82a38422ffe287c18823d339a">
+        <dex dex="/home/ascc/ascc/asccbot_v3/androidStudio/smartwatch/CameraFragment/app/build/intermediates/pre-dexed/debug/classes_c7bddda14f5fe51e6f9879db5a97c1917b9aa92a.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ascc/.android/build-cache/d96ee62eef424ff4735db74b1ecf3f49c0ca706c/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="d29714cc76b38157e3cbd034c66e1ec808eb4c19">
+        <dex dex="/home/ascc/ascc/asccbot_v3/androidStudio/smartwatch/CameraFragment/app/build/intermediates/pre-dexed/debug/classes_cfefd014bac2b2366c10048c422769d10d3a4e55.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ascc/.android/build-cache/51d0b59d3f8f57290ddca1b7fd574ecc177afdfd/output/jars/libs/internal_impl-25.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="e5343c9d19cb19ff55f6b268c7f3fe8c9d224f6f">
+        <dex dex="/home/ascc/ascc/asccbot_v3/androidStudio/smartwatch/CameraFragment/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.0_6a54730add3ad7ef70974eadf97624290e1d188b.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ascc/.android/build-cache/0da923df7a018077692997fb38f431aeda0cf4f8/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="75b1f366ff0bbc78f8b1f7cf0dc82e7c53afef6a">
+        <dex dex="/home/ascc/ascc/asccbot_v3/androidStudio/smartwatch/CameraFragment/app/build/intermediates/pre-dexed/debug/classes_77eef1db10d12749734fab0db4614209f7e348b1.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ascc/.android/build-cache/fb550cc6a5685639c49545981be0d3d6afb700af/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="4ccbcda5c72027c7f7c14be9ff8640d9cb0d8da0">
+        <dex dex="/home/ascc/ascc/asccbot_v3/androidStudio/smartwatch/CameraFragment/app/build/intermediates/pre-dexed/debug/classes_d13615e1f73011a22b05a5af1e90483cfeb022dc.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ascc/.android/build-cache/d47909ac5b302a7d93456c4fd104c245d959a936/output/jars/libs/internal_impl-25.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="665d21a8a069c96b4d9e8b434f5096d865b4e261">
+        <dex dex="/home/ascc/ascc/asccbot_v3/androidStudio/smartwatch/CameraFragment/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.0_d9c21ef9642802316f1208febcac486e5c2c50b3.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ascc/.android/build-cache/fb550cc6a5685639c49545981be0d3d6afb700af/output/jars/libs/internal_impl-25.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="3b61a70884adaf0be3fc06c70c801e3e6df13133">
+        <dex dex="/home/ascc/ascc/asccbot_v3/androidStudio/smartwatch/CameraFragment/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.0_be9036076ca0dff4ca91f2d9deb14a883b6e1c4e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ascc/ascc/asccbot_v3/androidStudio/smartwatch/CameraFragment/camerafragment/build/intermediates/bundles/default/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="3243d94c5cb6c633d14bd50b565a96576ebc27e2">
+        <dex dex="/home/ascc/ascc/asccbot_v3/androidStudio/smartwatch/CameraFragment/app/build/intermediates/pre-dexed/debug/classes_2d6983e60dd397ace18102230e9f1476b7c7fec3.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ascc/.android/build-cache/873ad9642a6fa34699c5cd87311d3eb78c81c5ee/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="8bc45ce1f63d1a391fd38b32a201be5a42f9c95d">
+        <dex dex="/home/ascc/ascc/asccbot_v3/androidStudio/smartwatch/CameraFragment/app/build/intermediates/pre-dexed/debug/classes_900d986cdb6dc69889c838ee9ac7577af915f5e3.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ascc/.android/build-cache/0da923df7a018077692997fb38f431aeda0cf4f8/output/jars/libs/internal_impl-25.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="f2e3b9bc1ec25f652e8007ce7774c991e38f6a00">
+        <dex dex="/home/ascc/ascc/asccbot_v3/androidStudio/smartwatch/CameraFragment/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.0_6ed3f56bbc1fdcd780e980053ce3efb6c42898e7.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ascc/.gradle/caches/modules-2/files-2.1/com.jakewharton/butterknife/7.0.1/d5d13ea991eab0252e3710e5df3d6a9d4b21d461/butterknife-7.0.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="d5d13ea991eab0252e3710e5df3d6a9d4b21d461">
+        <dex dex="/home/ascc/ascc/asccbot_v3/androidStudio/smartwatch/CameraFragment/app/build/intermediates/pre-dexed/debug/butterknife-7.0.1_a403852f0f9fabb469bb587cd35b4aa2cd198444.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ascc/.android/build-cache/d2acb17b531e12f24d1db4a7fd953ae8a18cabdf/output/jars/libs/internal_impl-25.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="ee5faf4dee5b6a4364bf51587871047dde7c703a">
+        <dex dex="/home/ascc/ascc/asccbot_v3/androidStudio/smartwatch/CameraFragment/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.0_80849e9e02e14ea5e563cc8f9fb3863b0c8a473a.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ascc/.android/build-cache/51d0b59d3f8f57290ddca1b7fd574ecc177afdfd/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="26674000177e45447a0326a6ad84612761199a13">
+        <dex dex="/home/ascc/ascc/asccbot_v3/androidStudio/smartwatch/CameraFragment/app/build/intermediates/pre-dexed/debug/classes_2aae38fca397640ed20122a5d7ab541c0374b4ec.jar" />
+    </item>
+
+</items>
