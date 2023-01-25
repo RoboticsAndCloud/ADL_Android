@@ -17,4 +17,5 @@ dependencies {
     compile "com.android.support:appcompat-v7:" + project.supportVersion
     compile 'com.jakewharton:butterknife:7.0.1'
     compile project(':camerafragment')
+    compile project(':lib')
 }

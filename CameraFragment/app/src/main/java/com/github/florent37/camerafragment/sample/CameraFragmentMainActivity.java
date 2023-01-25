@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresPermission;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -40,6 +41,13 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+
+import cafe.adriel.androidaudiorecorder.AndroidAudioRecorder;
+import cafe.adriel.androidaudiorecorder.model.AudioChannel;
+import cafe.adriel.androidaudiorecorder.model.AudioSampleRate;
+import cafe.adriel.androidaudiorecorder.model.AudioSource;
+
 
 import java.text.DateFormat;
 
@@ -82,6 +90,11 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
 
     final int MOTION_RECORD_TIME = 2 * 1000; // 2 seconds
 
+    final String imageRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera/ADL/Image";
+
+    private static final int REQUEST_RECORD_AUDIO = 0;
+    private static final String AUDIO_FILE_PATH =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera/ADL/Audio/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +103,11 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
         ButterKnife.bind(this);
 
         sm = (SensorManager) getSystemService(SENSOR_SERVICE);
+
+
+        // Microphone permission
+        Util.requestPermission(this, Manifest.permission.RECORD_AUDIO);
+        Util.requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 
     @OnClick(R.id.flash_switch_view)
@@ -118,14 +136,13 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
 //                ),
 //                getAlbumName()
 //        );
-        String imageRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera/ADL";
         System.out.println(imageRoot);
 
         Date date = new java.util.Date();
 //        String timeStr = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(date).toString();
 
         android.text.format.DateFormat df = new android.text.format.DateFormat();
-        String timeStr = df.format("yyyy-MM-dd-hh:mm:ss a", new java.util.Date()).toString();
+        String timeStr = df.format("yyyy-MM-dd-hh:mm:ss", new java.util.Date()).toString();
 
         if (cameraFragment != null) {
             cameraFragment.takePhotoOrCaptureVideo(new CameraFragmentResultAdapter() {
@@ -198,6 +215,7 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
         } else {
             addCamera();
         }
+
     }
 
     @Override
@@ -446,6 +464,29 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
     private Acceleration getAccelerationFromSensor(SensorEvent event) {
         long timestamp = (new Date()).getTime() + (event.timestamp - System.nanoTime()) / 1000000L;
         return new Acceleration(event.values[0], event.values[1], event.values[2], timestamp);
+    }
+
+
+    public void recordAudio(View v) {
+        android.text.format.DateFormat df = new android.text.format.DateFormat();
+        String timeStr = df.format("yyyy-MM-dd-hh:mm:ss", new java.util.Date()).toString();
+
+        String file_path = AUDIO_FILE_PATH + '/' + timeStr + "_rec.wav";
+        AndroidAudioRecorder.with(this)
+                // Required
+                .setFilePath(file_path)
+                .setColor(ContextCompat.getColor(this, R.color.recorder_bg))
+                .setRequestCode(REQUEST_RECORD_AUDIO)
+
+                // Optional
+                .setSource(AudioSource.MIC)
+                .setChannel(AudioChannel.STEREO)
+                .setSampleRate(AudioSampleRate.HZ_48000)
+                .setAutoStart(false)
+                .setKeepDisplayOn(true)
+
+                // Start recording
+                .record();
     }
 
 

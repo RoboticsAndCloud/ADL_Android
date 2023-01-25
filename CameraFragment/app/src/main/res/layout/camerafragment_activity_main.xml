@@ -10,6 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
     <Button
         android:id="@+id/addCameraButton"
         android:layout_width="match_parent"
@@ -17,6 +22,29 @@
         android:layout_margin="15dp"
         tools:visibility="gone"
         android:text="Add camera" />
+
+    <Button
+        android:id="@+id/addAudioButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        tools:visibility="gone"
+        android:onClick="recordAudio"
+        android:text="RECORD AUDIO" />
+
+    </LinearLayout>
+
+
+    <!--    <Button-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_centerInParent="true"-->
+<!--        android:padding="20dp"-->
+<!--        android:text="RECORD AUDIO"-->
+<!--        android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+<!--        android:textColor="@android:color/white"-->
+<!--        android:onClick="recordAudio"-->
+<!--        style="@style/Widget.AppCompat.Button.Borderless"/>-->
 
     <RelativeLayout
         android:id="@+id/cameraLayout"
