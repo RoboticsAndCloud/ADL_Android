@@ -14,11 +14,13 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cleveroad.audiovisualization.DbmHandler;
 import com.cleveroad.audiovisualization.GLAudioVisualizationView;
 
 import java.io.File;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -58,6 +60,9 @@ public class AudioRecorderActivity extends AppCompatActivity
     private ImageButton restartView;
     private ImageButton recordView;
     private ImageButton playView;
+
+    private final int AUDIO_RECORD_TIME = 2 * 1000; // 2 seconds
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,7 +143,8 @@ public class AudioRecorderActivity extends AppCompatActivity
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         if(autoStart && !isRecording){
-            toggleRecording(null);
+//            toggleRecording(null);
+            toggleRecordingWithDuration(null);
         }
     }
 
@@ -224,6 +230,48 @@ public class AudioRecorderActivity extends AppCompatActivity
                 }
             }
         });
+
+//        long motionStartTime = System.currentTimeMillis();
+//        long motionElapsedTime = 0L;
+//        motionElapsedTime = (new Date()).getTime() - motionStartTime;
+//
+//        // 2 seconds
+//        while (motionElapsedTime < AUDIO_RECORD_TIME) {
+//        }
+//
+//        pauseRecording();
+
+    }
+
+
+    public void toggleRecordingWithDuration(View v) {
+        stopPlaying();
+        long motionStartTime = System.currentTimeMillis();
+        long motionElapsedTime = 0L;
+        motionElapsedTime = (new Date()).getTime() - motionStartTime;
+
+        Util.wait(100, new Runnable() {
+            @Override
+            public void run() {
+                if (isRecording) {
+                    pauseRecording();
+                } else {
+//                    resumeRecording();
+                    resumeRecordingWithDuration();
+                }
+            }
+        });
+
+//        // 2 seconds
+//        while (motionElapsedTime < AUDIO_RECORD_TIME) {
+//        }
+//
+//        pauseRecording();
+
+//        Toast.makeText(getBaseContext(), "record finished", Toast.LENGTH_SHORT).show();
+
+        return;
+
     }
 
     public void togglePlaying(View v){
@@ -278,6 +326,31 @@ public class AudioRecorderActivity extends AppCompatActivity
 
         if(recorder == null) {
             timerView.setText("00:00:00");
+
+            recorder = OmRecorder.wav(
+                    new PullTransport.Default(Util.getMic(source, channel, sampleRate), AudioRecorderActivity.this),
+                    new File(filePath));
+        }
+        recorder.resumeRecording();
+
+        startTimer();
+    }
+
+    private void resumeRecordingWithDuration() {
+        isRecording = true;
+//        saveMenuItem.setVisible(false);
+//        statusView.setText(R.string.aar_recording);
+//        statusView.setVisibility(View.VISIBLE);
+//        restartView.setVisibility(View.INVISIBLE);
+//        playView.setVisibility(View.INVISIBLE);
+//        recordView.setImageResource(R.drawable.aar_ic_pause);
+//        playView.setImageResource(R.drawable.aar_ic_play);
+//
+//        visualizerHandler = new VisualizerHandler();
+//        visualizerView.linkTo(visualizerHandler);
+
+        if(recorder == null) {
+//            timerView.setText("00:00:00");
 
             recorder = OmRecorder.wav(
                     new PullTransport.Default(Util.getMic(source, channel, sampleRate), AudioRecorderActivity.this),

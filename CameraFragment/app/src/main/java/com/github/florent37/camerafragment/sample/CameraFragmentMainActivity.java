@@ -7,6 +7,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioFormat;
+import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,6 +18,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,9 +47,13 @@ import butterknife.OnClick;
 
 
 import cafe.adriel.androidaudiorecorder.AndroidAudioRecorder;
+import cafe.adriel.androidaudiorecorder.AudioRecorderAgent;
 import cafe.adriel.androidaudiorecorder.model.AudioChannel;
 import cafe.adriel.androidaudiorecorder.model.AudioSampleRate;
 import cafe.adriel.androidaudiorecorder.model.AudioSource;
+import omrecorder.AudioChunk;
+import omrecorder.PullTransport;
+import omrecorder.Recorder;
 
 
 import java.text.DateFormat;
@@ -94,7 +101,9 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
 
     private static final int REQUEST_RECORD_AUDIO = 0;
     private static final String AUDIO_FILE_PATH =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera/ADL/Audio2";
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera/ADL/Audio";
+
+    private final int AUDIO_RECORD_TIME = 2 * 1000; // 2 seconds
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,6 +179,46 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
 //        }
 
         startSensor();
+
+//        recordAudioAuto();
+
+
+        long motionStartTime = System.currentTimeMillis();
+        long motionElapsedTime = 0L;
+        motionElapsedTime = (new Date()).getTime() - motionStartTime;
+
+
+        df = new android.text.format.DateFormat();
+        timeStr = df.format("yyyy-MM-dd-hh:mm:ss", new java.util.Date()).toString();
+
+        String file_path = AUDIO_FILE_PATH + '/' + timeStr + "_rec.wav";
+        System.out.println(file_path);
+
+
+        AudioRecorderAgent audioAgent = new AudioRecorderAgent().setFilePath(file_path)
+                .setColor(ContextCompat.getColor(this, R.color.recorder_bg))
+//                .setRequestCode(REQUEST_RECORD_AUDIO)
+
+                // Optional
+                .setSource(AudioSource.MIC)
+                .setFilePath(file_path)
+                .setChannel(AudioChannel.STEREO)
+                .setSampleRate(AudioSampleRate.HZ_44100)
+                .setAutoStart(false)
+                .setKeepDisplayOn(true);
+
+
+        audioAgent.resumeRecordingWithDuration();
+
+        while (motionElapsedTime < AUDIO_RECORD_TIME) {
+            motionElapsedTime = (new Date()).getTime() - motionStartTime;
+        }
+
+        audioAgent.pauseRecording();
+        audioAgent.stopRecording();
+
+        Toast.makeText(getBaseContext(), "Audio " + file_path, Toast.LENGTH_SHORT).show();
+
     }
 
 
@@ -481,13 +530,56 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
                 // Optional
                 .setSource(AudioSource.MIC)
                 .setChannel(AudioChannel.STEREO)
-                .setSampleRate(AudioSampleRate.HZ_48000)
+                .setSampleRate(AudioSampleRate.HZ_44100)
                 .setAutoStart(false)
                 .setKeepDisplayOn(true)
 
                 // Start recording
                 .record();
     }
+
+
+    public void recordAudioAuto() {
+
+        long motionStartTime = System.currentTimeMillis();
+        long motionElapsedTime = 0L;
+        motionElapsedTime = (new Date()).getTime() - motionStartTime;
+
+        android.text.format.DateFormat df = new android.text.format.DateFormat();
+        String timeStr = df.format("yyyy-MM-dd-hh:mm:ss", new java.util.Date()).toString();
+
+        String file_path = AUDIO_FILE_PATH + '/' + timeStr + "_rec.wav";
+
+        AudioRecorderAgent audioAgent = new AudioRecorderAgent().setFilePath(file_path)
+                .setColor(ContextCompat.getColor(this, R.color.recorder_bg))
+//                .setRequestCode(REQUEST_RECORD_AUDIO)
+
+                // Optional
+                .setSource(AudioSource.MIC)
+                .setFilePath(file_path)
+                .setChannel(AudioChannel.STEREO)
+                .setSampleRate(AudioSampleRate.HZ_44100)
+                .setAutoStart(false)
+                .setKeepDisplayOn(true);
+
+
+        audioAgent.resumeRecordingWithDuration();
+
+                // 2 seconds
+//        while (motionElapsedTime < AUDIO_RECORD_TIME) {
+        motionElapsedTime = (new Date()).getTime() - motionStartTime;
+//        }
+//
+//        audioAgent.pauseRecording();
+////        audioAgent.stop()
+//        Toast.makeText(getBaseContext(), "onPhotoTaken " + file_path, Toast.LENGTH_SHORT).show();
+
+
+
+    }
+
+
+
 
 
 }

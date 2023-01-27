@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import cafe.adriel.androidaudiorecorder.model.AudioChannel;
 import cafe.adriel.androidaudiorecorder.model.AudioSampleRate;
 import cafe.adriel.androidaudiorecorder.model.AudioSource;
+import omrecorder.Recorder;
 
 public class AndroidAudioRecorder {
 
@@ -110,6 +111,23 @@ public class AndroidAudioRecorder {
         intent.putExtra(EXTRA_AUTO_START, autoStart);
         intent.putExtra(EXTRA_KEEP_DISPLAY_ON, keepDisplayOn);
         fragment.startActivityForResult(intent, requestCode);
+    }
+
+    public void recordAuto() {
+
+        AudioRecorderActivity audioRecorderActivity = new AudioRecorderActivity();
+
+
+
+        Intent intent = new Intent(activity, AudioRecorderActivity.class);
+        intent.putExtra(EXTRA_FILE_PATH, filePath);
+        intent.putExtra(EXTRA_COLOR, color);
+        intent.putExtra(EXTRA_SOURCE, source);
+        intent.putExtra(EXTRA_CHANNEL, channel);
+        intent.putExtra(EXTRA_SAMPLE_RATE, sampleRate);
+        intent.putExtra(EXTRA_AUTO_START, autoStart);
+        intent.putExtra(EXTRA_KEEP_DISPLAY_ON, keepDisplayOn);
+        activity.startActivityForResult(intent, requestCode);
     }
 
 }
