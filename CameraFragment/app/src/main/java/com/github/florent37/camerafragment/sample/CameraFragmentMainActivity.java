@@ -37,6 +37,8 @@ import com.github.florent37.camerafragment.widgets.MediaActionSwitchView;
 import com.github.florent37.camerafragment.widgets.RecordButton;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -87,6 +89,9 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
     @Bind(R.id.addCameraButton)
     View addCameraButton;
 
+    @Bind(R.id.addAudioButton)
+    View addAudioButton;
+
 
 
     private SensorManager sm;
@@ -103,7 +108,12 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
     private static final String AUDIO_FILE_PATH =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera/ADL/Audio";
 
+    private static final String MOTION_FILE_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera/ADL/Motion";
+
+
     private final int AUDIO_RECORD_TIME = 2 * 1000; // 2 seconds
+
+    private String timeStrForCollection = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,13 +155,14 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
 //                ),
 //                getAlbumName()
 //        );
-        System.out.println(imageRoot);
+//        System.out.println(imageRoot);
 
         Date date = new java.util.Date();
 //        String timeStr = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(date).toString();
 
         android.text.format.DateFormat df = new android.text.format.DateFormat();
-        String timeStr = df.format("yyyy-MM-dd-hh:mm:ss", new java.util.Date()).toString();
+        timeStrForCollection = df.format("yyyy-MM-dd-hh:mm:ss", new java.util.Date()).toString();
+
 
         if (cameraFragment != null) {
             cameraFragment.takePhotoOrCaptureVideo(new CameraFragmentResultAdapter() {
@@ -166,11 +177,11 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
                                                        }
                                                    },
                     imageRoot,
-                    timeStr);
+                    timeStrForCollection);
         }
 
         TextView acceleration = (TextView) findViewById(R.id.acceleration);
-        acceleration.setText("Photo:" + timeStr);
+        acceleration.setText("Photo:" + timeStrForCollection);
 
 //        try {
 //            Thread.sleep(5000);
@@ -178,7 +189,24 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
 //            e.printStackTrace();
 //        }
 
-        startSensor();
+
+        final String motion_file_path = MOTION_FILE_PATH + '/' + timeStrForCollection + "_moiton.txt";
+        cafe.adriel.androidaudiorecorder.Util.wait(1, new Runnable() {
+            @Override
+            public void run() {
+                startSensor();
+            }
+        });
+        cafe.adriel.androidaudiorecorder.Util.wait(MOTION_RECORD_TIME, new Runnable() {
+            @Override
+            public void run() {
+                stopSensor();
+                Toast.makeText(getBaseContext(), "Motion " + motion_file_path, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
 
 //        recordAudioAuto();
 
@@ -188,17 +216,25 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
         motionElapsedTime = (new Date()).getTime() - motionStartTime;
 
 
-        df = new android.text.format.DateFormat();
-        timeStr = df.format("yyyy-MM-dd-hh:mm:ss", new java.util.Date()).toString();
-
-        String file_path = AUDIO_FILE_PATH + '/' + timeStr + "_rec.wav";
+        final String file_path = AUDIO_FILE_PATH + '/' + timeStrForCollection + "_rec.wav";
         System.out.println(file_path);
 
 
-        AudioRecorderAgent audioAgent = new AudioRecorderAgent().setFilePath(file_path)
-                .setColor(ContextCompat.getColor(this, R.color.recorder_bg))
-//                .setRequestCode(REQUEST_RECORD_AUDIO)
 
+        try {
+            File dir = new File(AUDIO_FILE_PATH);
+            if (!dir.exists()) {
+                dir.mkdir();
+                System.out.println("Make dirs ");
+            }
+        }
+        catch(Exception e){
+            Log.w("creating file error", e.toString());
+        }
+
+
+        final AudioRecorderAgent audioAgent = new AudioRecorderAgent().setFilePath(file_path)
+                .setColor(ContextCompat.getColor(this, R.color.recorder_bg))
                 // Optional
                 .setSource(AudioSource.MIC)
                 .setFilePath(file_path)
@@ -210,14 +246,19 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
 
         audioAgent.resumeRecordingWithDuration();
 
-        while (motionElapsedTime < AUDIO_RECORD_TIME) {
-            motionElapsedTime = (new Date()).getTime() - motionStartTime;
-        }
+//        while (motionElapsedTime < AUDIO_RECORD_TIME) {
+//            motionElapsedTime = (new Date()).getTime() - motionStartTime;
+//        }
 
-        audioAgent.pauseRecording();
-        audioAgent.stopRecording();
 
-        Toast.makeText(getBaseContext(), "Audio " + file_path, Toast.LENGTH_SHORT).show();
+        cafe.adriel.androidaudiorecorder.Util.wait(AUDIO_RECORD_TIME, new Runnable() {
+            @Override
+            public void run() {
+                audioAgent.pauseRecording();
+                audioAgent.stopRecording();
+                Toast.makeText(getBaseContext(), "Audio " + file_path, Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -278,6 +319,8 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
     @RequiresPermission(Manifest.permission.CAMERA)
     public void addCamera() {
         addCameraButton.setVisibility(View.GONE);
+        addAudioButton.setVisibility(View.GONE);
+
         cameraLayout.setVisibility(View.VISIBLE);
 
         final CameraFragment cameraFragment = CameraFragment.newInstance(new Configuration.Builder()
@@ -452,6 +495,8 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
     @Override
     public void onSensorChanged(SensorEvent event) {
         Acceleration capturedAcceleration = getAccelerationFromSensor(event);
+        String motion_file_path = MOTION_FILE_PATH + '/' + timeStrForCollection + "_moiton.txt";
+
         motionElapsedTime = (new Date()).getTime() - motionStartTime;
         if (motionElapsedTime > MOTION_RECORD_TIME) {  // 2 seconds
             TextView acceleration = (TextView) findViewById(R.id.acceleration);
@@ -460,12 +505,17 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
                     "\nZ:" + capturedAcceleration.getZ() +
                     "\nTimestamp:" + "stop");
 
-            stopSensor();
+
+
+//            stopSensor();
 
             return;
         }
 
         updateTextView(capturedAcceleration);
+        String str_line = "" + capturedAcceleration.getX() + "\t" + capturedAcceleration.getY() + "\t" + capturedAcceleration.getZ() + "\n";
+
+        saveToFile(str_line, motion_file_path);
 //        sendDataToCassandra(capturedAcceleration);
     }
     @Override
@@ -580,6 +630,54 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
 
 
 
+    public void saveToFile(String text, String file) {
 
 
+        try {
+            File dir = new File(MOTION_FILE_PATH);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+        }
+        catch(Exception e){
+            Log.w("creating file error", e.toString());
+        }
+
+
+        try {
+            File myFile = new File(file);
+            if (!myFile.exists()) {
+                myFile.createNewFile();
+            }
+
+            FileOutputStream fOut = new FileOutputStream(myFile, true);
+            OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+            myOutWriter.append(text);
+            myOutWriter.close();
+            fOut.close();
+            Toast.makeText(getBaseContext(),
+                    "Done writing" + file,
+                    Toast.LENGTH_SHORT).show();
+
+            System.out.println("Writing:" + text + " to file:" + file);
+        } catch (Exception e) {
+            Toast.makeText(getBaseContext(), e.getMessage(),
+                    Toast.LENGTH_SHORT).show();
+        }
+
+//        try {
+//            FileOutputStream stream = new FileOutputStream(file);
+//
+//            stream.write(text.getBytes());
+//
+//            stream.close();
+//        } catch (Exception e){
+//            System.out.println("Got error when write motion data:");
+//            e.printStackTrace();
+//
+//        }
+//        finally {
+//
+//        }
+    }
 }

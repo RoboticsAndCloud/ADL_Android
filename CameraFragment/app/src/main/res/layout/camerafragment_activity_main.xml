@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         tools:visibility="gone"
-        android:text="Add camera" />
+        android:text="Collect Data" />
 
     <Button
         android:id="@+id/addAudioButton"
