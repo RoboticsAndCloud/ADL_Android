@@ -1,2 +1,9 @@
 import module and can not find packages
 https://stackoverflow.com/questions/25477052/imported-module-in-android-studio-cant-find-imported-class
+
+
+https://stackoverflow.com/questions/18340650/using-javas-bytebuffer-to-replicate-pythons-struct-pack
+
+
+ javac com/github/florent37/camerafragment/sample/TestMain.java 
+java com.github.florent37.camerafragment.sample.TestMain 
