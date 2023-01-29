@@ -106,16 +106,15 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
 
     private static final int REQUEST_RECORD_AUDIO = 0;
     private static final String AUDIO_FILE_PATH =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera/ADL/Audio";
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera/ADL";
 
-    private static final String MOTION_FILE_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera/ADL/Motion";
+    private static final String MOTION_FILE_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera/ADL";
 
 
     private final int AUDIO_RECORD_TIME = 2 * 1000; // 2 seconds
 
     private String timeStrForCollection = "";
 
-    private CommunicationService communicationService = new CommunicationService();
     private String ipsend = "10.227.102.0";
     private int port = 59000;
     private int cnt = 1;
@@ -185,9 +184,19 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
                     timeStrForCollection);
         }
 
-        String imageFileName = imageRoot + '/' + timeStrForCollection + ".jpg";
+        final String imageFileName = imageRoot + '/' + timeStrForCollection + ".jpg";
 
-        communicationService.socketImageSendingHandler(ipsend, port, 0, timeStrForCollection, imageFileName);
+//        communicationService.socketImageSendingHandler(ipsend, port, 0, timeStrForCollection, imageFileName);
+        new CommunicationImageService().execute(ipsend, String.valueOf(port), "1", timeStrForCollection, imageFileName);
+
+        cafe.adriel.androidaudiorecorder.Util.wait(MOTION_RECORD_TIME, new Runnable() {
+            @Override
+            public void run() {
+//                communicationService.socketImageSendingHandler(ipsend, port, 0, timeStrForCollection, imageFileName);
+                Toast.makeText(getBaseContext(), "Image Sent " , Toast.LENGTH_SHORT).show();
+
+            }
+        });
 
         TextView acceleration = (TextView) findViewById(R.id.acceleration);
         acceleration.setText("Photo:" + timeStrForCollection);
@@ -215,7 +224,9 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
             }
         });
 
-        communicationService.socketMotionSendingHandler(ipsend, port,  timeStrForCollection, motion_file_path);
+        new CommunicationMotionService().execute(ipsend, String.valueOf(port), timeStrForCollection, motion_file_path);
+
+//        communicationService.socketMotionSendingHandler(ipsend, port,  timeStrForCollection, motion_file_path);
 
 
 
@@ -272,7 +283,9 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
             }
         });
 
-        communicationService.socketAudioSendingHandler(ipsend, port,  timeStrForCollection, motion_file_path);
+        new CommunicationAudioService().execute(ipsend, String.valueOf(port), timeStrForCollection, file_path);
+
+//        communicationService.socketAudioSendingHandler(ipsend, port,  timeStrForCollection, motion_file_path);
 
 
     }

@@ -7,7 +7,7 @@ public class TestMain {
         String ipsend = "10.227.102.0";
         int port = 59000;
         int cnt = 1;
-        String currentTime = "20230129000001";
+        String currentTime = "20230129000002";
         String image_filename = "/home/ascc/Desktop/test.jpg";
         String audio_filename = "/home/ascc/Desktop/test.wav";
         String motion_filename =  "/home/ascc/Desktop/motion.txt";

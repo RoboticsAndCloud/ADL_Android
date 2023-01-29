@@ -1,27 +1,17 @@
 package com.github.florent37.camerafragment.sample;
 
+import android.os.AsyncTask;
+
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 
-
-class ImageInfo {
-    int x;
-    String filename;
-}
-public class CommunicationService {
+public class CommunicationMotionService extends AsyncTask<String, Void, Void> {
     private SocketChannel socketChannelBasic = null;
     private final int STATE_ADL_ACTIVITY_WMU_AUDIO = 15;
     private final int STATE_ADL_ACTIVITY_WMU_IMAGE = 16;
@@ -34,6 +24,21 @@ public class CommunicationService {
 //    public static final int MAXPHOTO = 50000;
 //    public static final int MAXTEXT = 10000;
 
+    @Override
+    protected Void doInBackground(String ...params) {
+
+        //this method will be running on background thread so don't update UI frome here
+        //do your long running http tasks here,you dont want to pass argument and u can access the parent class' variable url over here
+        String ipsend = params[0];
+        int port =  Integer.parseInt(params[1]);
+        String timeStrForCollection = params[2];
+        String imageFileName = params[3];
+
+        socketMotionSendingHandler(ipsend, port, timeStrForCollection, imageFileName);
+
+
+        return null;
+    }
 
     public void socketMotionSendingHandler(String ipsend, int port, String currentTime, String filename) {
         Socket echoSocket;
