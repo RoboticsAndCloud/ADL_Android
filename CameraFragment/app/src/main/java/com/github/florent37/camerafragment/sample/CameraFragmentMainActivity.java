@@ -115,6 +115,11 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
 
     private String timeStrForCollection = "";
 
+    private CommunicationService communicationService = new CommunicationService();
+    private String ipsend = "10.227.102.0";
+    private int port = 59000;
+    private int cnt = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,7 +166,7 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
 //        String timeStr = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(date).toString();
 
         android.text.format.DateFormat df = new android.text.format.DateFormat();
-        timeStrForCollection = df.format("yyyy-MM-dd-hh:mm:ss", new java.util.Date()).toString();
+        timeStrForCollection = df.format("yyyyMMddhhmmss", new java.util.Date()).toString();
 
 
         if (cameraFragment != null) {
@@ -179,6 +184,10 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
                     imageRoot,
                     timeStrForCollection);
         }
+
+        String imageFileName = imageRoot + '/' + timeStrForCollection + ".jpg";
+
+        communicationService.socketImageSendingHandler(ipsend, port, 0, timeStrForCollection, imageFileName);
 
         TextView acceleration = (TextView) findViewById(R.id.acceleration);
         acceleration.setText("Photo:" + timeStrForCollection);
@@ -205,6 +214,9 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
 
             }
         });
+
+        communicationService.socketMotionSendingHandler(ipsend, port,  timeStrForCollection, motion_file_path);
+
 
 
 
@@ -259,6 +271,9 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
                 Toast.makeText(getBaseContext(), "Audio " + file_path, Toast.LENGTH_SHORT).show();
             }
         });
+
+        communicationService.socketAudioSendingHandler(ipsend, port,  timeStrForCollection, motion_file_path);
+
 
     }
 

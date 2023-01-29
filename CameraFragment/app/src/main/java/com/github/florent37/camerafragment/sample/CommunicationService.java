@@ -35,6 +35,103 @@ public class CommunicationService {
 //    public static final int MAXTEXT = 10000;
 
 
+    public void socketMotionSendingHandler(String ipsend, int port, String currentTime, String filename) {
+        Socket echoSocket;
+        OutputStream sout;
+
+
+        try {
+            echoSocket = new Socket(ipsend, port);        // 1st statement
+            sout = echoSocket.getOutputStream();
+            sout.write(STATE_ADL_ACTIVITY_WMU_MOTION);
+            System.out.println("Send data image type:" + STATE_ADL_ACTIVITY_WMU_MOTION);
+
+
+            ByteBuffer bytebuf = ByteBuffer.allocate(14);
+            System.out.println("cur len:" + currentTime.getBytes().length);
+
+            bytebuf.put(currentTime.getBytes(), 0, currentTime.length());
+            bytebuf.flip();
+
+            sout.write(bytebuf.array());
+            System.out.println("Cur time:" + currentTime.length());
+
+
+            //  Send Audio
+            File myFile = new File(filename);
+            System.out.println("Image length:" + myFile.length());
+            byte[] mybytearray = new byte[(int) myFile.length()];
+            FileInputStream fis = new FileInputStream(myFile);
+            BufferedInputStream bis = new BufferedInputStream(fis);
+            bis.read(mybytearray, 0, mybytearray.length);
+
+            sout.write(mybytearray);
+
+
+            sout.close();
+            echoSocket.close();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        return;
+
+    }
+
+    public void socketAudioSendingHandler(String ipsend, int port, String currentTime, String filename) {
+        Socket echoSocket;
+        OutputStream sout;
+
+
+        try {
+            echoSocket = new Socket(ipsend, port);        // 1st statement
+            sout = echoSocket.getOutputStream();
+            sout.write(STATE_ADL_ACTIVITY_WMU_AUDIO);
+            System.out.println("Send data image type:" + STATE_ADL_ACTIVITY_WMU_AUDIO);
+
+
+            ByteBuffer bytebuf = ByteBuffer.allocate(14);
+            System.out.println("cur len:" + currentTime.getBytes().length);
+
+            bytebuf.put(currentTime.getBytes(), 0, currentTime.length());
+            bytebuf.flip();
+
+            sout.write(bytebuf.array());
+            System.out.println("Cur time:" + currentTime.length());
+
+
+            //  Send Audio
+            File myFile = new File(filename);
+            System.out.println("Image length:" + myFile.length());
+            byte[] mybytearray = new byte[(int) myFile.length()];
+            FileInputStream fis = new FileInputStream(myFile);
+            BufferedInputStream bis = new BufferedInputStream(fis);
+            bis.read(mybytearray, 0, mybytearray.length);
+
+            sout.write(mybytearray);
+
+
+            sout.close();
+            echoSocket.close();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        return;
+
+    }
+
+
+
+
+
+
     public void socketImageSendingHandler(String ipsend, int port, int cnt, String currentTime, String filename){
         Socket echoSocket;
         OutputStream sout;
