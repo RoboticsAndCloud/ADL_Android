@@ -42,7 +42,7 @@ public class CommunicationImageService extends AsyncTask<String, Void, Void> {
         String timeStrForCollection = params[3];
         String imageFileName = params[4];
 
-        socketImageSendingHandler(ipsend, port, 0, timeStrForCollection, imageFileName);
+        socketImageSendingHandler(ipsend, port, cnt, timeStrForCollection, imageFileName);
 
 
         return null;
@@ -152,6 +152,7 @@ public class CommunicationImageService extends AsyncTask<String, Void, Void> {
 
         try {
             echoSocket = new Socket(ipsend, port);        // 1st statement
+            echoSocket.setReuseAddress(true);
             sout = echoSocket.getOutputStream();
             sout.write(STATE_ADL_ACTIVITY_WMU_IMAGE);
             System.out.println("Send data image type:" + STATE_ADL_ACTIVITY_WMU_IMAGE);

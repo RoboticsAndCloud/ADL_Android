@@ -100,9 +100,9 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
     long motionStartTime = System.currentTimeMillis();
     long motionElapsedTime = 0L;
 
-    final int MOTION_RECORD_TIME = 2 * 1000; // 2 seconds
+    final int MOTION_RECORD_TIME = 3 * 1000; // 2 seconds
 
-    final String imageRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera/ADL/Image";
+    final String imageRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera/ADL";
 
     private static final int REQUEST_RECORD_AUDIO = 0;
     private static final String AUDIO_FILE_PATH =
@@ -112,6 +112,8 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
 
 
     private final int AUDIO_RECORD_TIME = 2 * 1000; // 2 seconds
+
+    private final int IMAGE_WAIT_TIME = 500;
 
     private String timeStrForCollection = "";
 
@@ -185,14 +187,13 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
         }
 
         final String imageFileName = imageRoot + '/' + timeStrForCollection + ".jpg";
-
 //        communicationService.socketImageSendingHandler(ipsend, port, 0, timeStrForCollection, imageFileName);
-        new CommunicationImageService().execute(ipsend, String.valueOf(port), "1", timeStrForCollection, imageFileName);
 
-        cafe.adriel.androidaudiorecorder.Util.wait(MOTION_RECORD_TIME, new Runnable() {
+        cafe.adriel.androidaudiorecorder.Util.wait(IMAGE_WAIT_TIME, new Runnable() {
             @Override
             public void run() {
-//                communicationService.socketImageSendingHandler(ipsend, port, 0, timeStrForCollection, imageFileName);
+                new CommunicationImageService().execute(ipsend, String.valueOf(port), "1", timeStrForCollection, imageFileName);
+//
                 Toast.makeText(getBaseContext(), "Image Sent " , Toast.LENGTH_SHORT).show();
 
             }
@@ -207,7 +208,7 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
 //            e.printStackTrace();
 //        }
 
-
+        //Todo: check if the file exists or not, retake the images
         final String motion_file_path = MOTION_FILE_PATH + '/' + timeStrForCollection + "_moiton.txt";
         cafe.adriel.androidaudiorecorder.Util.wait(1, new Runnable() {
             @Override
@@ -219,12 +220,13 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
             @Override
             public void run() {
                 stopSensor();
+                new CommunicationMotionService().execute(ipsend, String.valueOf(port), timeStrForCollection, motion_file_path);
+
                 Toast.makeText(getBaseContext(), "Motion " + motion_file_path, Toast.LENGTH_SHORT).show();
 
             }
         });
 
-        new CommunicationMotionService().execute(ipsend, String.valueOf(port), timeStrForCollection, motion_file_path);
 
 //        communicationService.socketMotionSendingHandler(ipsend, port,  timeStrForCollection, motion_file_path);
 
@@ -269,24 +271,17 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
 
         audioAgent.resumeRecordingWithDuration();
 
-//        while (motionElapsedTime < AUDIO_RECORD_TIME) {
-//            motionElapsedTime = (new Date()).getTime() - motionStartTime;
-//        }
-
 
         cafe.adriel.androidaudiorecorder.Util.wait(AUDIO_RECORD_TIME, new Runnable() {
             @Override
             public void run() {
                 audioAgent.pauseRecording();
                 audioAgent.stopRecording();
+                new CommunicationAudioService().execute(ipsend, String.valueOf(port), timeStrForCollection, file_path);
+
                 Toast.makeText(getBaseContext(), "Audio " + file_path, Toast.LENGTH_SHORT).show();
             }
         });
-
-        new CommunicationAudioService().execute(ipsend, String.valueOf(port), timeStrForCollection, file_path);
-
-//        communicationService.socketAudioSendingHandler(ipsend, port,  timeStrForCollection, motion_file_path);
-
 
     }
 
