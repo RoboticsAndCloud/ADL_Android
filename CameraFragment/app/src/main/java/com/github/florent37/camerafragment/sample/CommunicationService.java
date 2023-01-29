@@ -7,15 +7,20 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 
 
-
+class ImageInfo {
+    int x;
+    String filename;
+}
 public class CommunicationService {
     private SocketChannel socketChannelBasic = null;
     private final int STATE_ADL_ACTIVITY_WMU_AUDIO = 15;
@@ -31,7 +36,87 @@ public class CommunicationService {
 
 
     public void socketImageSendingHandler(String ipsend, int port, int cnt, String currentTime, String filename){
+        Socket echoSocket;
+        OutputStream sout;
 
+
+        try {
+            echoSocket = new Socket(ipsend, port);        // 1st statement
+            sout = echoSocket.getOutputStream();
+            sout.write(STATE_ADL_ACTIVITY_WMU_IMAGE);
+            System.out.println("Send data image type:" + STATE_ADL_ACTIVITY_WMU_IMAGE);
+
+
+            ByteBuffer bytebuf = ByteBuffer.allocate(18);
+            bytebuf.putInt(cnt);
+            System.out.println("bytebuf:" + bytebuf.array()[3]);
+            System.out.println("cur len:" + currentTime.getBytes().length);
+
+            bytebuf.put(currentTime.getBytes(), 0, currentTime.length());
+            bytebuf.flip();
+
+            sout.write(bytebuf.array());
+            System.out.println("Cur time:" + currentTime.length());
+
+
+            //  Send images
+            File myFile = new File(filename);
+            System.out.println("Image length:" + myFile.length());
+            byte[] mybytearray = new byte[(int) myFile.length()];
+            FileInputStream fis = new FileInputStream(myFile);
+            BufferedInputStream bis = new BufferedInputStream(fis);
+            bis.read(mybytearray, 0, mybytearray.length);
+
+//            bytebuf = ByteBuffer.allocate((int)(myFile.length()));
+//
+//            bytebuf.put(mybytearray, 0, (mybytearray.length));
+//            bytebuf.flip();
+
+            sout.write(mybytearray);
+
+//            InputStream imageStream = getContentResolver().openInputStream(filename);
+//            final Bitmap imageBitMap = BitmapFactory.decodeStream(imageStream);
+//
+//            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//            imageBitMap.compress(Bitmap.CompressFormat.JPEG,0, bos);
+//            byte[] array = bos.toByteArray();
+//            sout.write(array);
+
+
+//            Bitmap bmp=((BitmapDrawable)imageView.getDrawable()).getBitmap(); //String str = et.getText().toString();
+//
+//
+//            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//            bmp.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
+//            byte[] array = bos.toByteArray();
+//
+//            BufferedImage image = ImageIO.read(new File(filename));
+//
+//            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//            ImageIO.write(image, "jpg", byteArrayOutputStream);
+//
+//
+//            sout.write(byteArrayOutputStream.toByteArray());
+//            sout.flush();
+//            System.out.println("Flushed: " + System.currentTimeMillis());
+
+
+            sout.close();
+            echoSocket.close();
+
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+        return;
+
+//
+//
 //        if (socketChannelBasic == null) {
 //            System.out.println("Request Connection");
 //            try {
@@ -50,6 +135,10 @@ public class CommunicationService {
 //                        ee.printStackTrace();
 //                    }
 //                }
+//
+//
+//
+//
 //            } catch (IOException e) {
 //                System.out.println("Connection Exception failed");
 //                e.printStackTrace();
@@ -61,106 +150,85 @@ public class CommunicationService {
 //                }
 //            }
 //        }
-
-
-        try {
-            ByteArrayOutputStream data = new ByteArrayOutputStream();
-            DataOutputStream dos = new DataOutputStream(
-                    new BufferedOutputStream(data));
-            dos.writeInt(STATE_ADL_ACTIVITY_WMU_AUDIO);
-            byte [] packedData = data.toByteArray();
-
-            System.out.println("Send data:" + packedData.toString());
-
-            ByteBuffer bytebuf = ByteBuffer.allocate(MAXLINE);
-            bytebuf.put(packedData, 0, (packedData.length < MAXLINE ? packedData.length : MAXLINE));
-            bytebuf.flip();
-            socketChannelBasic.write(bytebuf);
-
-            dos.writeUTF("some string"); // this includes a 16-bit unsigned length
-            dos.writeInt(500);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        try {
-            ByteArrayOutputStream data = new ByteArrayOutputStream();
-            DataOutputStream dos = new DataOutputStream(
-                    new BufferedOutputStream(data));
-            dos.writeUTF(currentTime); // this includes a 16-bit unsigned length
-
-            byte [] packedData = data.toByteArray();
-
-            System.out.println("Send data:" + packedData.toString());
-
-            ByteBuffer bytebuf = ByteBuffer.allocate(MAXLINE);
-            bytebuf.put(packedData, 0, (packedData.length < MAXLINE ? packedData.length : MAXLINE));
-            bytebuf.flip();
-            socketChannelBasic.write(bytebuf);
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            // Send images
-            File myFile = new File(filename);
-            System.out.println("Image length:" + myFile.length());
-            byte[] mybytearray = new byte[(int) myFile.length()];
-            FileInputStream fis = new FileInputStream(myFile);
-            BufferedInputStream bis = new BufferedInputStream(fis);
-            bis.read(mybytearray, 0, mybytearray.length);
-            ByteBuffer bytebuf = ByteBuffer.allocate(MAXLINE);
-            bytebuf.put(mybytearray, 0, (mybytearray.length));
-            bytebuf.flip();
-            socketChannelBasic.write(bytebuf);
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
 //
-//         {
-//            if (basic_connected==true) {
-//                try {
-//                    ByteBuffer bytebuf = ByteBuffer.allocate(MAXLINE);
-//                    bytebuf.put(data, 0, (data.length < MAXLINE ? data.length : MAXLINE));
-//                    bytebuf.flip();
-//                    socketChannelBasic.write(bytebuf);
-//                } catch (IOException e) {
-//                    // TODO Auto-generated catch block
-//                    e.printStackTrace();
-//                    //basic_receiver_switch = false;
-//                    //basic_connected = false;
-//                    try {
-//                        socketChannelBasic.close();
-//                    } catch (IOException ee) {
-//                        ee.printStackTrace();
-//                    }
-//                    if (basic_connected==false){
-//                        ConnectBasicServer();
-//                    }
-//                }
-//            }
+//
+//        try {
+//            ByteArrayOutputStream data = new ByteArrayOutputStream();
+//            DataOutputStream dos = new DataOutputStream(data);
+//            dos.writeInt(STATE_ADL_ACTIVITY_WMU_IMAGE);
+//            dos.flush();
+//            byte [] packedData = data.toByteArray();
+//
+//
+//            System.out.println("Send data:" + packedData[3]);
+//            System.out.println("Send data len:" + packedData.length);
+//
+//
+//            ByteBuffer bytebuf = ByteBuffer.allocate(MAXLINE);
+//            bytebuf.put(packedData, 0, (packedData.length < MAXLINE ? packedData.length : MAXLINE));
+//            bytebuf.flip();
+//            socketChannelBasic.write(bytebuf);
+//
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
 //        }
-
-
-        // Send data
-
-
-
+//
+//
+//        try {
+//            ByteArrayOutputStream data = new ByteArrayOutputStream();
+//            DataOutputStream dos = new DataOutputStream(data);
+//
+//            dos.writeUTF(currentTime); // this includes a 16-bit unsigned length
+//            dos.flush();
+//
+//            byte [] packedData = data.toByteArray();
+//            System.out.println("Cur time:" + currentTime.length());
+//            System.out.println("Send data:" + packedData);
+//            System.out.println("Send data len:" + packedData.length);
+//
+//
+//            ByteBuffer bytebuf = ByteBuffer.allocate(MAXLINE);
+//            bytebuf.put(packedData, 0, (packedData.length < MAXLINE ? packedData.length : MAXLINE));
+//            bytebuf.flip();
+//            socketChannelBasic.write(bytebuf);
+//
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        try {
+//            // Send images
+//            File myFile = new File(filename);
+////            System.out.println("Image length:" + myFile.length());
+////            byte[] mybytearray = new byte[(int) myFile.length()];
+////            FileInputStream fis = new FileInputStream(myFile);
+////            BufferedInputStream bis = new BufferedInputStream(fis);
+////            bis.read(mybytearray, 0, mybytearray.length);
+////            ByteBuffer bytebuf = ByteBuffer.allocate(MAXLINE);
+////            bytebuf.put(mybytearray, 0, (mybytearray.length));
+////            bytebuf.flip();
+////            socketChannelBasic.write(bytebuf);
+//
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//
+////         Send data
+//
+//
+//
 //        // Timer
-        try {
-            socketChannelBasic.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        socketChannelBasic = null;
+//        try {
+//            socketChannelBasic.close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        socketChannelBasic = null;
 //
     }
 
