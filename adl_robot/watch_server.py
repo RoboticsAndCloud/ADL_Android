@@ -161,7 +161,7 @@ class MedicineServerMain(object):
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
         ip = adl_type_constants.ROBOT_IP
-        ip = "10.227.102.0"
+        ip = "10.227.102.176"
         s.bind((ip, port))
         print("Server established! IP:", ip)
         print("PORT:",port)
