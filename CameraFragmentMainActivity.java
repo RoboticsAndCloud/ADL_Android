@@ -148,7 +148,7 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
     private final int request_audio = 2;
     private final int request_motion = 3;
 
-    private String ipsend = "192.168.0.105";
+    private String ipsend = "192.168.1.134";
 
     private int port = 59000;
 
@@ -238,6 +238,8 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
                 case 12:
                     recordMotionData();
                     break;
+                case 13:
+                    collectData();
                 default:
                     // Handle unrecognized integers if necessary
                     break;
@@ -250,38 +252,7 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
             serverThread.interrupt();
         }
     }
-//    private void startSocketServerThread() {
-//        new Thread(() -> {
-//            try {
-//                // Server socket setup
-//                // Replace with your desired port number
-//                ServerSocket serverSocket = new ServerSocket(server_port);
-//                System.out.println("server start");
-//
-//                // Wait for client connection
-//                Socket clientSocket = serverSocket.accept();
-//
-//                // Set up input stream to receive data from the client
-//                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-//
-//                // Read and print data from the client
-//                String inputLine;
-//                while ((inputLine = in.readLine()) != null) {
-//                    System.out.println("Received from client: " + inputLine);
-//                }
-//
-//                // Close resources
-//                in.close();
-//                clientSocket.close();
-//                serverSocket.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }).start();
-//    }
-//    private void server_handler(){
-//
-//    }
+
 
     @OnClick(R.id.flash_switch_view)
     public void onFlashSwitcClicked() {
@@ -420,9 +391,7 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
 
 
 
-    public void collectMotionData(){
 
-    }
 
 
     @OnClick(R.id.settings_view)
@@ -487,19 +456,6 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
                 .commitAllowingStateLoss();
 
         if (cameraFragment != null) {
-            //cameraFragment.setResultListener(new CameraFragmentResultListener() {
-            //    @Override
-            //    public void onVideoRecorded(String filePath) {
-            //        Intent intent = PreviewActivity.newIntentVideo(CameraFragmentMainActivity.this, filePath);
-            //        startActivityForResult(intent, REQUEST_PREVIEW_CODE);
-            //    }
-//
-            //    @Override
-            //    public void onPhotoTaken(byte[] bytes, String filePath) {
-            //        Intent intent = PreviewActivity.newIntentPhoto(CameraFragmentMainActivity.this, filePath);
-            //        startActivityForResult(intent, REQUEST_PREVIEW_CODE);
-            //    }
-            //});
 
             cameraFragment.setStateListener(new CameraFragmentStateAdapter() {
 
@@ -772,14 +728,7 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
 
         audioAgent.resumeRecordingWithDuration();
 
-        // 2 seconds
-//        while (motionElapsedTime < AUDIO_RECORD_TIME) {
-        motionElapsedTime = (new Date()).getTime() - motionStartTime;
-//        }
-//
-//        audioAgent.pauseRecording();
-////        audioAgent.stop()
-//        Toast.makeText(getBaseContext(), "onPhotoTaken " + file_path, Toast.LENGTH_SHORT).show();
+
 
 
 
@@ -822,19 +771,6 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
                     Toast.LENGTH_SHORT).show();
         }
 
-//        try {
-//            FileOutputStream stream = new FileOutputStream(file);
-//
-//            stream.write(text.getBytes());
-//
-//            stream.close();
-//        } catch (Exception e){
-//            System.out.println("Got error when write motion data:");
-//            e.printStackTrace();
-//
-//        }
-//        finally {
-//
-//        }
+
     }
 }
