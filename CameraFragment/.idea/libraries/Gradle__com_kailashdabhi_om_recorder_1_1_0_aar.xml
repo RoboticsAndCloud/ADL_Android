@@ -1,12 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: com.kailashdabhi:om-recorder:1.1.0@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.android/build-cache/22c73f012d445b15ce9cf6cdd6bd1c172657dd3b/output/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.android/build-cache/22c73f012d445b15ce9cf6cdd6bd1c172657dd3b/output/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/om-recorder-1.1.0.aar/c469faf41b2d1fa339a5de8b4761a06e/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/om-recorder-1.1.0.aar/c469faf41b2d1fa339a5de8b4761a06e/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/om-recorder-1.1.0.aar/c469faf41b2d1fa339a5de8b4761a06e/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.kailashdabhi/om-recorder/1.1.0/465c8fdfe9706e726d1e46a0d79a46d0347d21eb/om-recorder-1.1.0-sources.jar!/" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>

@@ -62,9 +62,13 @@ public class CommunicationMotionService extends AsyncTask<String, Void, Void> {
             System.out.println("Cur time:" + currentTime.length());
 
 
+            System.out.println("File name :" + filename);
+
+
+
             //  Send Audio
             File myFile = new File(filename);
-            System.out.println("Image length:" + myFile.length());
+            System.out.println("File length:" + myFile.length());
             byte[] mybytearray = new byte[(int) myFile.length()];
             FileInputStream fis = new FileInputStream(myFile);
             BufferedInputStream bis = new BufferedInputStream(fis);

@@ -3,8 +3,18 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CameraFragment.iml" filepath="$PROJECT_DIR$/CameraFragment.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/camerafragment/camerafragment.iml" filepath="$PROJECT_DIR$/camerafragment/camerafragment.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/CameraFragment.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/CameraFragment.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/CameraFragment.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/CameraFragment.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/CameraFragment.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/CameraFragment.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/CameraFragment.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/CameraFragment.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/camerafragment/CameraFragment.camerafragment.iml" filepath="$PROJECT_DIR$/.idea/modules/camerafragment/CameraFragment.camerafragment.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/camerafragment/CameraFragment.camerafragment.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/camerafragment/CameraFragment.camerafragment.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/camerafragment/CameraFragment.camerafragment.main.iml" filepath="$PROJECT_DIR$/.idea/modules/camerafragment/CameraFragment.camerafragment.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/camerafragment/CameraFragment.camerafragment.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/camerafragment/CameraFragment.camerafragment.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lib/CameraFragment.lib.iml" filepath="$PROJECT_DIR$/.idea/modules/lib/CameraFragment.lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lib/CameraFragment.lib.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/lib/CameraFragment.lib.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lib/CameraFragment.lib.main.iml" filepath="$PROJECT_DIR$/.idea/modules/lib/CameraFragment.lib.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lib/CameraFragment.lib.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/lib/CameraFragment.lib.unitTest.iml" />
     </modules>
   </component>
 </project>

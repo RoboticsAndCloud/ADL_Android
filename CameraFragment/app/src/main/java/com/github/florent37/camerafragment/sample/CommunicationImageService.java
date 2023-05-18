@@ -4,12 +4,14 @@ import android.os.AsyncTask;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -53,9 +55,15 @@ public class CommunicationImageService extends AsyncTask<String, Void, Void> {
         OutputStream sout;
 
 
+
+
         try {
             echoSocket = new Socket(ipsend, port);        // 1st statement
             sout = echoSocket.getOutputStream();
+//            InputStream inputStream = echoSocket.getInputStream();
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+//            String command = reader.readLine();
+//            System.out.println("Command is :" + command);
             sout.write(STATE_ADL_ACTIVITY_WMU_MOTION);
             System.out.println("Send data image type:" + STATE_ADL_ACTIVITY_WMU_MOTION);
 
@@ -153,26 +161,30 @@ public class CommunicationImageService extends AsyncTask<String, Void, Void> {
         try {
             echoSocket = new Socket(ipsend, port);        // 1st statement
             echoSocket.setReuseAddress(true);
+//            InputStream inputStream = echoSocket.getInputStream();
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+//            String command = reader.readLine();
+//            System.out.println("Command is :" + command);
             sout = echoSocket.getOutputStream();
             sout.write(STATE_ADL_ACTIVITY_WMU_IMAGE);
-            System.out.println("Send data image type:" + STATE_ADL_ACTIVITY_WMU_IMAGE);
+            //System.out.println("Send data image type:" + STATE_ADL_ACTIVITY_WMU_IMAGE);
 
 
             ByteBuffer bytebuf = ByteBuffer.allocate(18);
             bytebuf.putInt(cnt);
-            System.out.println("bytebuf:" + bytebuf.array()[3]);
-            System.out.println("cur len:" + currentTime.getBytes().length);
+            //System.out.println("bytebuf:" + bytebuf.array()[3]);
+            //System.out.println("cur len:" + currentTime.getBytes().length);
 
             bytebuf.put(currentTime.getBytes(), 0, currentTime.length());
             bytebuf.flip();
 
             sout.write(bytebuf.array());
-            System.out.println("Cur time:" + currentTime.length());
+            //System.out.println("Cur time:" + currentTime.length());
 
 
             //  Send images
             File myFile = new File(filename);
-            System.out.println("Image length:" + myFile.length());
+            //System.out.println("Image length:" + myFile.length());
             byte[] mybytearray = new byte[(int) myFile.length()];
             FileInputStream fis = new FileInputStream(myFile);
             BufferedInputStream bis = new BufferedInputStream(fis);
@@ -220,6 +232,8 @@ public class CommunicationImageService extends AsyncTask<String, Void, Void> {
 
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            // if scou != Null, scout.close()
         }
 
 
