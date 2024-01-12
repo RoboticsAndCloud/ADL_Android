@@ -9,6 +9,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioFormat;
 import android.media.MediaRecorder;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
@@ -138,6 +139,7 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera/ADL/Audio/";
 
     private static final String MOTION_FILE_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera/ADL/Motion/";
+    private static final String BATTERY_INFO_FILE_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera/ADL/Battery/";
 
 
     private final int AUDIO_RECORD_TIME = 2 * 1000; // 2 seconds
@@ -275,24 +277,58 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
     }
     @OnClick(R.id.record_button)
     public void onRecordButtonClicked() {
-        final Handler handler = new Handler();
-        final int delay = 2000; //milliseconds 2000->both motion and audio,>3000 only audio
 
-        handler.postDelayed(new Runnable(){
-            int count = 0;
-            public void run(){
-                collectData(); // execute the collect_data function
-                count++;
-                if (count < 100) {
-                    handler.postDelayed(this, delay);
-                } else {
-                    handler.removeCallbacks(this); // stop the loop
-                }
-            }
-        }, delay);
+        this.getBatteryInfo();
+//        final Handler handler = new Handler();
+//        final int delay = 2000; //milliseconds 2000->both motion and audio,>3000 only audio
+//
+//        handler.postDelayed(new Runnable(){
+//            int count = 0;
+//            public void run(){
+//                collectData(); // execute the collect_data function
+//                count++;
+//                if (count < 100) {
+//                    handler.postDelayed(this, delay);
+//                } else {
+//                    handler.removeCallbacks(this); // stop the loop
+//                }
+//            }
+//        }, delay);
         //recordMotionData();
 
 
+    }
+
+
+    public void getBatteryInfo() {
+        int battery_level = 0;
+        int b_microamper_hour = 0;
+        int b_current_now = 0;
+
+        if (Build.VERSION.SDK_INT >= 21) {
+
+            BatteryManager bm = (BatteryManager) getSystemService(BATTERY_SERVICE);
+            battery_level = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+            b_microamper_hour = bm.getIntProperty(BatteryManager.	BATTERY_PROPERTY_CHARGE_COUNTER);
+            b_current_now = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW);
+        }
+
+        android.text.format.DateFormat df1 = new android.text.format.DateFormat();
+        String time_str = df1.format("yyyyMMddhhmmss", new java.util.Date()).toString();
+
+
+        final String infoFilePath = BATTERY_INFO_FILE_PATH + '/'  + "battery_info.txt";
+
+
+        String str_line = "time:" + time_str + '\t'
+                + "battery:" + String.valueOf(battery_level) + '\t'
+                + "b_microamper_hour:" + String.valueOf(b_microamper_hour) + '\t'
+                + "b_current_now:" + String.valueOf(b_current_now) + '\t'
+                + "\n";
+
+        Toast.makeText(getBaseContext(), str_line, Toast.LENGTH_SHORT).show();
+
+        saveToFile(str_line, infoFilePath);
     }
 
 
