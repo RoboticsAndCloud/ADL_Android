@@ -26,6 +26,8 @@ public class CommunicationImageService extends AsyncTask<String, Void, Void> {
     private final int STATE_ADL_ACTIVITY_WMU_IMAGE = 16;
     private final int STATE_ADL_ACTIVITY_WMU_MOTION = 17;
 
+    private static Socket echoSocket = null;
+
 
 
 
@@ -51,14 +53,16 @@ public class CommunicationImageService extends AsyncTask<String, Void, Void> {
     }
 
     public void socketMotionSendingHandler(String ipsend, int port, String currentTime, String filename) {
-        Socket echoSocket;
+//        Socket echoSocket;
         OutputStream sout;
 
 
 
 
         try {
-            echoSocket = new Socket(ipsend, port);        // 1st statement
+            if (echoSocket == null) {
+                echoSocket = new Socket(ipsend, port);
+            }// 1st statement
             sout = echoSocket.getOutputStream();
 //            InputStream inputStream = echoSocket.getInputStream();
 //            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));

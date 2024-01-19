@@ -35,6 +35,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.TreeMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -157,6 +158,8 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
 
     private int port = 59000;
 
+    private boolean cap_flag = false;
+
 
     private ServerThread serverThread;
 
@@ -172,25 +175,39 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
             this.serverPort = serverPort;
             this.handler = handler;
         }
-
+        // 100 ms not working on the watch, run 30s then quit
+        //  105 ms, not working on the watch, run 3 mins then quit
+        // 110 ms, quit
+        // 120 ms, quit, run 5 mins quit
+        // 130 ms, quit, run 2 mins quit
+        //
         @Override
         public void run() {
             try {
                 ServerSocket serverSocket = new ServerSocket(serverPort);
                 while (!Thread.currentThread().isInterrupted()) {
-                    Socket clientSocket = serverSocket.accept();
-                    sendConnectedMessage();
+                    if (cap_flag == true) {
+                        Message msg1 = handler.obtainMessage();
+                        msg1.obj = String.valueOf(10);
+                        handler.sendMessage(msg1);
+                        sleep(180);
+                        continue;
 
-                    DataInputStream input = new DataInputStream(clientSocket.getInputStream());
-                    int receivedInt = input.readInt();
-                    String message = String.valueOf(receivedInt);
+                    }
 
-
-                    Message msg = handler.obtainMessage();
-                    msg.obj = message;
-                    handler.sendMessage(msg);
+//                    Socket clientSocket = serverSocket.accept();
+//                    sendConnectedMessage();
+//
+//                    DataInputStream input = new DataInputStream(clientSocket.getInputStream());
+//                    int receivedInt = input.readInt();
+//                    String message = String.valueOf(receivedInt);
+//
+//
+//                    Message msg = handler.obtainMessage();
+//                    msg.obj = message;
+//                    handler.sendMessage(msg);
                 }
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -237,12 +254,15 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
             switch (receivedInt) {
                 case 10:
                     capturePhoto();
+//                    capturePhotoLocal();
                     break;
                 case 11:
                     recordAudio();
+//                    recordAudioLocal();
                     break;
                 case 12:
                     recordMotionData();
+//                    recordMotionDataLocal();
                     break;
                 case 13:
                     collectData();
@@ -277,7 +297,7 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
     }
     @OnClick(R.id.record_button)
     public void onRecordButtonClicked() {
-
+        cap_flag = true;
         this.getBatteryInfo();
 //        final Handler handler = new Handler();
 //        final int delay = 2000; //milliseconds 2000->both motion and audio,>3000 only audio
@@ -304,6 +324,7 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
         int battery_level = 0;
         int b_microamper_hour = 0;
         int b_current_now = 0;
+        int b_current_avg = 0;
 
         if (Build.VERSION.SDK_INT >= 21) {
 
@@ -311,6 +332,7 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
             battery_level = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
             b_microamper_hour = bm.getIntProperty(BatteryManager.	BATTERY_PROPERTY_CHARGE_COUNTER);
             b_current_now = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW);
+            b_current_avg = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_AVERAGE);
         }
 
         android.text.format.DateFormat df1 = new android.text.format.DateFormat();
@@ -321,9 +343,10 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
 
 
         String str_line = "time:" + time_str + '\t'
-                + "battery:" + String.valueOf(battery_level) + '\t'
+                + "battery:" + String.valueOf(battery_level) + "%" + '\t'
                 + "b_microamper_hour:" + String.valueOf(b_microamper_hour) + '\t'
                 + "b_current_now:" + String.valueOf(b_current_now) + '\t'
+                + "b_current_avg:" + String.valueOf(b_current_avg) + '\t'
                 + "\n";
 
         Toast.makeText(getBaseContext(), str_line, Toast.LENGTH_SHORT).show();
@@ -348,8 +371,7 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
     }
 
 
-
-    private void capturePhoto() {
+    private void capturePhotoLocal() {
         final CameraFragmentApi cameraFragment = getCameraFragment();
         android.text.format.DateFormat df = new android.text.format.DateFormat();
         timeStr_image = df.format("yyyyMMddhhmmss", new java.util.Date()).toString();
@@ -368,12 +390,68 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
         final String imageFileName = imageRoot + '/' + timeStr_image + ".jpg";
 //        while(checkFileExist(imageFileName) == false) {
 //        }
+//        cafe.adriel.androidaudiorecorder.Util.wait(IMAGE_WAIT_TIME, () -> {
+////            new CommunicationImageService().execute(ipsend, String.valueOf(port), "1", timeStr_image, imageFileName);
+//            System.out.println(imageFileName);
+//            Toast.makeText(getBaseContext(), "Image Sent ", Toast.LENGTH_SHORT).show();
+//        });
+    }
+
+    private void capturePhoto() {
+        final CameraFragmentApi cameraFragment = getCameraFragment();
+        android.text.format.DateFormat df = new android.text.format.DateFormat();
+        timeStr_image = df.format("yyyyMMddhhmmss", new java.util.Date()).toString();
+
+        String imageFileNameLocal = imageRoot + '/' + timeStr_image + ".jpg";
+
+        int cnt = 0;
+        while (checkFileExist(imageFileNameLocal) == true) {
+            cnt += 1;
+            timeStr_image = timeStr_image + "_" + String.valueOf(cnt);
+            imageFileNameLocal = imageRoot + '/' + timeStr_image + ".jpg";
+        }
+
+        // if (cameraFragment != null) {
+        cameraFragment.takePhotoOrCaptureVideo(new CameraFragmentResultAdapter() {
+                                                   @Override
+                                                   public void onPhotoTaken(byte[] bytes, String filePath) {
+                                                       Toast.makeText(getBaseContext(), "onPhotoTaken " + filePath, Toast.LENGTH_SHORT).show();
+                                                   }
+                                               },
+                imageRoot,
+                timeStr_image);
+        // }
+
+        timeStr_image = df.format("yyyyMMddhhmmss", new java.util.Date()).toString();
+        final String imageFileName = imageRoot + '/' + timeStr_image + ".jpg";
         cafe.adriel.androidaudiorecorder.Util.wait(IMAGE_WAIT_TIME, () -> {
             new CommunicationImageService().execute(ipsend, String.valueOf(port), "1", timeStr_image, imageFileName);
             System.out.println(imageFileName);
             Toast.makeText(getBaseContext(), "Image Sent ", Toast.LENGTH_SHORT).show();
         });
     }
+
+
+
+    private void recordMotionDataLocal() {
+        android.text.format.DateFormat df1 = new android.text.format.DateFormat();
+        timeStr_motion = df1.format("yyyyMMddhhmmss", new java.util.Date()).toString();
+        final String motionFilePath = MOTION_FILE_PATH + '/' + timeStr_motion + "_motion.txt";
+        //long motionStartTime = System.currentTimeMillis();
+        //cafe.adriel.androidaudiorecorder.Util.wait(1, () -> startSensor());
+        startSensor();
+        cafe.adriel.androidaudiorecorder.Util.wait(MOTION_RECORD_TIME, () -> {
+            stopSensor();
+//            new CommunicationMotionService().execute(ipsend, String.valueOf(port), timeStr_motion, motionFilePath);
+//
+//            Toast.makeText(getBaseContext(), "Motion " + motionFilePath, Toast.LENGTH_SHORT).show();
+
+        });
+        long motionStartTime = System.currentTimeMillis();
+        long motionElapsedTime = 0L;
+        motionElapsedTime = (new Date()).getTime() - motionStartTime;
+    }
+
 
     private void recordMotionData() {
         android.text.format.DateFormat df1 = new android.text.format.DateFormat();
@@ -392,6 +470,37 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
         long motionStartTime = System.currentTimeMillis();
         long motionElapsedTime = 0L;
         motionElapsedTime = (new Date()).getTime() - motionStartTime;
+    }
+
+    private void recordAudioLocal() {
+        android.text.format.DateFormat df2 = new android.text.format.DateFormat();
+        timeStr_audio = df2.format("yyyyMMddhhmmss", new java.util.Date()).toString();
+        final String audioFilePath = AUDIO_FILE_PATH + '/' + timeStr_audio + "_rec.wav";
+        try {
+            File dir = new File(AUDIO_FILE_PATH);
+            if (!dir.exists()) {
+                dir.mkdir();
+            }
+        } catch (Exception e) {
+            Log.w("creating file error", e.toString());
+        }
+
+        final AudioRecorderAgent audioAgent = new AudioRecorderAgent().setFilePath(audioFilePath)
+                .setColor(ContextCompat.getColor(this, R.color.recorder_bg))
+                .setSource(AudioSource.MIC)
+                //.setFilePath(audioFilePath)
+                .setChannel(AudioChannel.STEREO)
+                .setSampleRate(AudioSampleRate.HZ_44100)
+                .setAutoStart(false)
+                .setKeepDisplayOn(true);
+
+        audioAgent.resumeRecordingWithDuration();
+
+        cafe.adriel.androidaudiorecorder.Util.wait(AUDIO_RECORD_TIME, () -> {
+            audioAgent.pauseRecording();
+            audioAgent.stopRecording();
+//            new CommunicationAudioService().execute(ipsend, String.valueOf(port), timeStr_audio, audioFilePath);
+        });
     }
 
     private void recordAudio() {
@@ -427,8 +536,8 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
     public void collectData()  {
 
         capturePhoto();
-        recordMotionData();
-        recordAudio();
+//        recordMotionData();
+//        recordAudio();
     }
 
 
@@ -503,7 +612,7 @@ public class CameraFragmentMainActivity extends AppCompatActivity  implements Se
         cameraLayout.setVisibility(View.VISIBLE);
 
         final CameraFragment cameraFragment = CameraFragment.newInstance(new Configuration.Builder()
-                .setCamera(Configuration.CAMERA_FACE_REAR).build());
+                .setCamera(Configuration.CAMERA_FACE_REAR).setMediaQuality(Configuration.MEDIA_QUALITY_LOWEST).build()); // set quality
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content, cameraFragment, FRAGMENT_TAG)
                 .commitAllowingStateLoss();
